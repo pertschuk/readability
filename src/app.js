@@ -1,7 +1,6 @@
 // Ensure console.log spits out timestamps
 // firefox reader source: https://hg.mozilla.org/mozilla-central/file/tip/toolkit/components/reader
 require('log-timestamp')
-async = require('async');
 
 // Express
 const app        = require('express')()
