@@ -38,9 +38,9 @@ app.post('/', bodyParser, (req, res) => {
 
   console.log('Fetching ' + urls + '...')
 
-  axios.all(urls.map(url => axios.get(url, 
-    {
-        transformResponse: [(data) => {
+  Promise.all(urls.map((url) => {
+    return axios.get(url, {
+        transformResponse: (data) => {
             const dom    = new JSDOM(data)
             const parsed = new readability(dom.window.document, {}).parse()
             let readableDOM = new JSDOM(parsed.content)
@@ -49,14 +49,16 @@ app.post('/', bodyParser, (req, res) => {
 
             console.log('Fetched and parsed ' + url + ' successfully')
             return paragraphTexts.filter(paragraph => paragraph.text.length > 10)
-  }]}))).then(axios.spread((...responses) => {
-    return res
-    .status(200)
-    .send({
-        paragraphs: responses.map(response => response.data).flat(1)
+        }}).catch(e => e)
+    })).then(results => {
+        const validResponses = results.filter(result => !(result instanceof Error));
+        return res
+            .status(200)
+            .send({
+                paragraphs: validResponses.map(res => res.data).flat(1)
+            })
+            .end()
     })
-    .end()
-  }))
 })
 
 app.listen(port, () => console.log(`Readability.js server listening on port ${port}!`))
