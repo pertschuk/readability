@@ -24,6 +24,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', bodyParser, (req, res) => {
+  console.log(req.body)
   const urls = req.body.urls.split(',')
 
   if (urls === undefined || urls === '') {
@@ -51,6 +52,7 @@ app.post('/', bodyParser, (req, res) => {
         return paragraphTexts.filter(paragraph => paragraph.text.length > 10)
 
         })
+
     })).then((values) => {
         return res
             .status(200)
