@@ -24,8 +24,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', bodyParser, (req, res) => {
-  console.log(req.body)
-  const urls = req.body.urls.split(',')
+  const urls = req.body.urls
 
   if (urls === undefined || urls === '') {
     return res
